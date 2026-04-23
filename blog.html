@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog — Runngo</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--green:#1A9E72;--green-light:#E6F7F1;--green-dark:#0D6B4D;--ink:#0F1A14;--ink-mid:#3A4A40;--ink-soft:#7A8C82;--paper:#F5F7F5;--border:#DDE8E2;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);}
+nav{position:sticky;top:0;z-index:100;background:rgba(245,247,245,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 40px;height:64px;display:flex;align-items:center;justify-content:space-between;}
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:22px;letter-spacing:-1px;color:var(--ink);display:flex;align-items:center;gap:8px;text-decoration:none;}
+.logo-mark{width:28px;height:28px;background:var(--green);border-radius:8px;display:flex;align-items:center;justify-content:center;color:white;font-size:14px;}
+.nav-links{display:flex;gap:32px;list-style:none;}
+.nav-links a{text-decoration:none;font-size:14px;color:var(--ink-mid);}
+.nav-links a:hover,.nav-links a.active{color:var(--green);}
+.btn-primary{font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;color:white;background:var(--green);border:none;padding:8px 20px;border-radius:100px;cursor:pointer;text-decoration:none;}
+
+.hero{padding:60px 40px 40px;max-width:1100px;margin:0 auto;}
+.hero-label{font-size:11px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--green);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.hero-label::before{content:'';width:20px;height:2px;background:var(--green);}
+.hero-title{font-family:'Syne',sans-serif;font-size:clamp(32px,4vw,52px);font-weight:800;line-height:1.0;letter-spacing:-2px;margin-bottom:16px;}
+.hero-sub{font-size:15px;line-height:1.7;color:var(--ink-mid);max-width:500px;}
+
+.cats{padding:0 40px 24px;max-width:1100px;margin:0 auto;display:flex;gap:8px;flex-wrap:wrap;}
+.cat{font-family:'DM Sans',sans-serif;font-size:13px;padding:6px 16px;border-radius:100px;border:1px solid var(--border);background:white;color:var(--ink-mid);cursor:pointer;}
+.cat:hover{border-color:var(--green);color:var(--green);}
+.cat.active{background:var(--green);color:white;border-color:var(--green);}
+
+.main{max-width:1100px;margin:0 auto;padding:0 40px 60px;}
+.featured{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;}
+.featured-card{background:white;border:1px solid var(--border);border-radius:20px;overflow:hidden;cursor:pointer;transition:all 0.2s;text-decoration:none;color:inherit;display:block;}
+.featured-card:hover{transform:translateY(-3px);box-shadow:0 12px 36px rgba(0,0,0,0.09);border-color:transparent;}
+.featured-card.big{grid-row:1/3;}
+.card-img{width:100%;object-fit:cover;display:block;}
+.featured-card.big .card-img{height:280px;}
+.featured-card:not(.big) .card-img{height:160px;}
+.card-img-placeholder{background:linear-gradient(135deg,#1A3A2A,#1A9E72);display:flex;align-items:center;justify-content:center;}
+.card-img-placeholder span{font-size:40px;}
+.card-body{padding:20px;}
+.card-cat{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--green);margin-bottom:8px;}
+.card-title{font-family:'Syne',sans-serif;font-size:17px;font-weight:700;margin-bottom:8px;line-height:1.3;letter-spacing:-0.3px;}
+.featured-card.big .card-title{font-size:22px;}
+.card-summary{font-size:13px;line-height:1.6;color:var(--ink-mid);margin-bottom:12px;}
+.card-meta{display:flex;align-items:center;gap:12px;font-size:12px;color:var(--ink-soft);}
+.card-autor{font-weight:500;color:var(--ink-mid);}
+
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.article-card{background:white;border:1px solid var(--border);border-radius:16px;overflow:hidden;cursor:pointer;transition:all 0.2s;text-decoration:none;color:inherit;display:block;}
+.article-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.08);border-color:transparent;}
+.article-card .card-img{height:140px;}
+.article-card .card-body{padding:16px;}
+.article-card .card-title{font-size:14px;}
+
+.loading{text-align:center;padding:60px 20px;color:var(--ink-soft);}
+.loader{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--green);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.empty{text-align:center;padding:60px 20px;color:var(--ink-soft);}
+
+.article-view{display:none;max-width:720px;margin:0 auto;padding:0 40px 60px;}
+.article-view.visible{display:block;}
+.main.hidden{display:none;}
+.back-btn{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--ink-soft);cursor:pointer;margin-bottom:32px;background:none;border:none;font-family:'DM Sans',sans-serif;padding:0;}
+.back-btn:hover{color:var(--green);}
+.article-cat{font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--green);margin-bottom:12px;}
+.article-title{font-family:'Syne',sans-serif;font-size:clamp(28px,4vw,42px);font-weight:800;letter-spacing:-1px;line-height:1.1;margin-bottom:16px;}
+.article-meta{display:flex;align-items:center;gap:16px;font-size:13px;color:var(--ink-soft);margin-bottom:32px;padding-bottom:24px;border-bottom:1px solid var(--border);}
+.article-img{width:100%;height:320px;object-fit:cover;border-radius:16px;margin-bottom:32px;}
+.article-img-placeholder{width:100%;height:320px;border-radius:16px;margin-bottom:32px;background:linear-gradient(135deg,#1A3A2A,#1A9E72);display:flex;align-items:center;justify-content:center;font-size:64px;}
+.article-content{font-size:16px;line-height:1.8;color:var(--ink-mid);}
+.article-content p{margin-bottom:20px;}
+
+footer{background:white;border-top:1px solid var(--border);padding:32px 40px;}
+.foot-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;}
+.foot-copy{font-size:13px;color:var(--ink-soft);}
+.foot-links{display:flex;gap:22px;}
+.foot-links a{font-size:13px;color:var(--ink-soft);text-decoration:none;}
+.foot-links a:hover{color:var(--green);}
+
+@media(max-width:860px){
+  nav{padding:0 20px;}.nav-links{display:none;}
+  .hero{padding:36px 20px 24px;}.cats{padding:0 20px 16px;}
+  .main{padding:0 20px 40px;}
+  .featured{grid-template-columns:1fr;}.featured-card.big{grid-row:auto;}
+  .grid{grid-template-columns:1fr;}
+  .article-view{padding:0 20px 40px;}
+  footer{padding:24px 20px;}.foot-inner{flex-direction:column;gap:14px;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo"><div class="logo-mark">▶</div>runngo</a>
+  <ul class="nav-links">
+    <li><a href="/">Calendario</a></li>
+    <li><a href="/blog.html" class="active">Blog</a></li>
+    <li><a href="#">Destinos</a></li>
+  </ul>
+  <a href="https://airtable.com/appdP8BxTKmWcFGfm/pagO5phW8QklvNtzk/form" target="_blank" class="btn-primary">Publicar carrera</a>
+</nav>
+
+<section class="hero">
+  <div class="hero-label">Inspiración runner</div>
+  <h1 class="hero-title">El blog de<br>los corredores.</h1>
+  <p class="hero-sub">Carreras, zapatillas, nutrición y todo lo que necesitas para correr más y mejor.</p>
+</section>
+
+<div class="cats">
+  <button class="cat active" onclick="setCat('todas',this)">Todas</button>
+  <button class="cat" onclick="setCat('Carreras',this)">Carreras</button>
+  <button class="cat" onclick="setCat('Zapatillas',this)">Zapatillas</button>
+  <button class="cat" onclick="setCat('Nutrición',this)">Nutrición</button>
+  <button class="cat" onclick="setCat('Entrenamiento',this)">Entrenamiento</button>
+  <button class="cat" onclick="setCat('Viajes',this)">Viajes</button>
+</div>
+
+<div class="main" id="main">
+  <div class="loading"><div class="loader"></div>Cargando artículos...</div>
+</div>
+
+<div class="article-view" id="article-view">
+  <button class="back-btn" onclick="goBack()">← Volver al blog</button>
+  <div id="article-content"></div>
+</div>
+
+<footer>
+  <div class="foot-inner">
+    <div class="foot-copy">© 2026 Runngo · Hecho con 🏃 en España</div>
+    <div class="foot-links">
+      <a href="/">Calendario</a>
+      <a href="#">Privacidad</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+let allPosts=[];
+let activeCat='todas';
+const CATS_EMOJI={'Carreras':'🏃','Zapatillas':'👟','Nutrición':'🥗','Entrenamiento':'💪','Viajes':'✈️'};
+
+function catColor(cat){
+  const map={'Carreras':'#1A9E72','Zapatillas':'#1B4F8A','Nutrición':'#B45309','Entrenamiento':'#5C3D8F','Viajes':'#C2410C'};
+  return map[cat]||'#1A9E72';
+}
+
+function formatDate(d){
+  if(!d)return'';
+  return new Date(d).toLocaleDateString('es-ES',{day:'numeric',month:'long',year:'numeric'});
+}
+
+function imgEl(url,cls,h){
+  if(url)return`<img src="${url}" class="${cls}" style="height:${h}px" alt="">`;
+  return`<div class="${cls} card-img-placeholder" style="height:${h}px"><span>${CATS_EMOJI['Carreras']||'🏃'}</span></div>`;
+}
+
+function renderList(posts){
+  const main=document.getElementById('main');
+  if(!posts.length){
+    main.innerHTML='<div class="empty"><p>No hay artículos en esta categoría todavía.</p></div>';
+    return;
+  }
+  const featured=posts.slice(0,3);
+  const rest=posts.slice(3);
+  let html='';
+
+  if(featured.length){
+    html+='<div class="featured">';
+    featured.forEach((p,i)=>{
+      const f=p.fields||{};
+      const big=i===0?'big':'';
+      const imgH=i===0?280:160;
+      html+=`<a class="featured-card ${big}" href="#" onclick="openPost('${p.id}');return false;">
+        ${imgEl(f['Imagen URL'],'card-img',imgH)}
+        <div class="card-body">
+          <div class="card-cat" style="color:${catColor(f.Categoría)}">${f.Categoría||'General'}</div>
+          <div class="card-title">${f.Título||'Sin título'}</div>
+          ${i===0?`<div class="card-summary">${(f.Resumen||'').substring(0,120)}${f.Resumen?.length>120?'...':''}</div>`:''}
+          <div class="card-meta"><span class="card-autor">${f.Autor||'Runngo'}</span><span>${formatDate(f.Fecha)}</span></div>
+        </div>
+      </a>`;
+    });
+    html+='</div>';
+  }
+
+  if(rest.length){
+    html+='<div class="grid">';
+    rest.forEach(p=>{
+      const f=p.fields||{};
+      html+=`<a class="article-card" href="#" onclick="openPost('${p.id}');return false;">
+        ${imgEl(f['Imagen URL'],'card-img',140)}
+        <div class="card-body">
+          <div class="card-cat" style="color:${catColor(f.Categoría)}">${f.Categoría||'General'}</div>
+          <div class="card-title">${f.Título||'Sin título'}</div>
+          <div class="card-meta"><span class="card-autor">${f.Autor||'Runngo'}</span><span>${formatDate(f.Fecha)}</span></div>
+        </div>
+      </a>`;
+    });
+    html+='</div>';
+  }
+
+  main.innerHTML=html;
+}
+
+function applyFilter(){
+  const filtered=activeCat==='todas'?allPosts:allPosts.filter(p=>(p.fields?.Categoría||'')=== activeCat);
+  renderList(filtered);
+}
+
+function setCat(cat,el){
+  activeCat=cat;
+  document.querySelectorAll('.cat').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  applyFilter();
+}
+
+function openPost(id){
+  const post=allPosts.find(p=>p.id===id);
+  if(!post)return;
+  const f=post.fields||{};
+  const imgH=320;
+  let html=`
+    <div class="article-cat" style="color:${catColor(f.Categoría)}">${f.Categoría||'General'}</div>
+    <h1 class="article-title">${f.Título||'Sin título'}</h1>
+    <div class="article-meta">
+      <span class="card-autor">${f.Autor||'Runngo'}</span>
+      <span>${formatDate(f.Fecha)}</span>
+    </div>
+    ${imgEl(f['Imagen URL'],'article-img',imgH)}
+    <div class="article-content">${(f.Contenido||f.Resumen||'').split('\n').map(p=>p?`<p>${p}</p>`:'').join('')}</div>
+  `;
+  document.getElementById('article-content').innerHTML=html;
+  document.getElementById('main').classList.add('hidden');
+  document.querySelector('.hero').style.display='none';
+  document.querySelector('.cats').style.display='none';
+  document.getElementById('article-view').classList.add('visible');
+  window.scrollTo(0,0);
+}
+
+function goBack(){
+  document.getElementById('main').classList.remove('hidden');
+  document.querySelector('.hero').style.display='';
+  document.querySelector('.cats').style.display='';
+  document.getElementById('article-view').classList.remove('visible');
+  window.scrollTo(0,0);
+}
+
+async function init(){
+  try{
+    const res=await fetch('/.netlify/functions/blog');
+    const data=await res.json();
+    if(data.error)throw new Error(data.error);
+    allPosts=data.sort((a,b)=>new Date(b.fields?.Fecha||0)-new Date(a.fields?.Fecha||0));
+    if(allPosts.length===0){
+      document.getElementById('main').innerHTML='<div class="empty"><p>Aún no hay artículos publicados. ¡Pronto habrá contenido aquí!</p></div>';
+    } else {
+      renderList(allPosts);
+    }
+  }catch(e){
+    document.getElementById('main').innerHTML=`<div class="empty"><p>Error cargando artículos: ${e.message}</p></div>`;
+  }
+}
+init();
+</script>
+</body>
+</html>
